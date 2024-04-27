@@ -1,0 +1,80 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Mapping Art Galleries in NYC</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.28/"></script>
+
+  <script>
+  require([
+    "esri/config",
+    "esri/Map",
+    "esri/views/MapView",
+
+    "esri/layers/FeatureLayer"
+
+  ], function(esriConfig, Map, MapView, FeatureLayer) {
+
+  esriConfig.apiKey = "AAPKa6b73010608e43458530d77c85d0f776urQTUFKkN0VjBlbET3sb3a9Fgoi_YayYWLNmx4yb3vCMF-N4i-NGZD_MS0YlRUTY";
+
+  const map = new Map({
+    basemap: "dark-gray-vector"
+  });
+
+  const view = new MapView({
+    container: "viewDiv",
+    map: map,
+    center: [-73.9352, 40.7306],
+    zoom: 10
+  });
+
+
+  // Create a popup template
+const popupTemplate = {
+  title: "Gallery Info", 
+  content: "{name}, {city}, {tel}",
+  fieldInfos: [
+    {
+      fieldName: "name",
+      label: "Name",
+    },
+    {
+      fieldName: "city", 
+      label: "City"
+    },
+    {
+      fieldName: "tel",
+      label: "Phone"
+    }
+  ]
+};
+
+// Set the popup template on the layer
+const galleriesTable = new FeatureLayer({
+  url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/Art_Galleries_NewYork/FeatureServer",
+  outFields: ["name", "city", "tel"],
+  popupTemplate: popupTemplate,
+  isEditable: true,
+  visible: true
+});
+
+
+map.add(galleriesTable, 0);
+
+  });
+</script>
+
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>
